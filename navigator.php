@@ -17,9 +17,7 @@
             <li class="active"><a href="index.php" class="act">Home</a></li>	
             <!-- Mega Menu -->
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Kategori Produk<b class="caret"></b>
-              </a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Kategori Produk<b class="caret"></b></a>
               <ul class="dropdown-menu multi-column columns-3">
                 <div class="row">
                   <div class="multi-gd-img">
@@ -44,6 +42,8 @@
             </li>
             <li><a href="cart.php">Keranjang Saya</a></li>
             <li><a href="daftarorder.php">Daftar Order</a></li>
+            <li><a href="blog.php">Blog</a></li>
+            <li><a href="partner.php">Jadi Mitra?</a></li>
           </ul>
         </div>
       </nav>

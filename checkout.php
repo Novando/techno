@@ -80,7 +80,7 @@ if(isset($_POST["checkout"])){
 <!-- checkout -->
 	<div class="checkout">
 		<div class="container">
-			<h1>Terima kasih, <?=$_SESSION['name']?> telah membeli <?php echo $itungtrans3 ?> barang di MoyComp</span></h1>
+			<h1>Terima kasih, <?=$_SESSION['name']?> telah membeli <?php echo $itungtrans3 ?> barang di Digital Tech</span></h1>
 			<div class="checkout-right">
 				<table class="timetable_sub">
 					<thead>

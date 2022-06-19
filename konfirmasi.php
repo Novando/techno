@@ -10,44 +10,72 @@ $idorder = $_GET['id'];
 
 include 'dbconnect.php';
 
-if(isset($_POST['confirm']))
-	{
-		
-		$userid = $_SESSION['id'];
-		$veriforderid = mysqli_query($conn,"select * from cart where orderid='$idorder'");
-		$fetch = mysqli_fetch_array($veriforderid);
-		$liat = mysqli_num_rows($veriforderid);
-		
-		if($fetch>0){
+if(isset($_POST['confirm'])){		
+	$userid = $_SESSION['id'];
+	$veriforderid = mysqli_query($conn,"select * from cart where orderid='$idorder'");
+	$fetch = mysqli_fetch_array($veriforderid);
+	$liat = mysqli_num_rows($veriforderid);
+	
+	if($fetch>0){
 		$nama = $_POST['nama'];
 		$metode = $_POST['metode'];
 		$tanggal = $_POST['tanggal'];
-			  
-		$kon = mysqli_query($conn,"insert into konfirmasi (orderid, userid, payment, namarekening, tglbayar) 
-		values('$idorder','$userid','$metode','$nama','$tanggal')");
-		if ($kon){
 		
-		$up = mysqli_query($conn,"update cart set status='Confirmed' where orderid='$idorder'");
-		
-		echo " <div class='alert alert-success'>
-			Terima kasih telah melakukan konfirmasi, team kami akan melakukan verifikasi.
-			Informasi selanjutnya akan dikirim via Email
-		  </div>
-		<meta http-equiv='refresh' content='7; url= index.php'/>  ";
-		} else { echo "<div class='alert alert-warning'>
-			Gagal Submit, silakan ulangi lagi.
-		  </div>
-		 <meta http-equiv='refresh' content='3; url= konfirmasi.php'/> ";
+		$nama_file = $_FILES['uploadgambar']['name'];
+		$ext = pathinfo($nama_file, PATHINFO_EXTENSION);
+		$random = crypt($nama_file, time());
+		$ukuran_file = $_FILES['uploadgambar']['size'];
+		$tipe_file = $_FILES['uploadgambar']['type'];
+		$tmp_file = $_FILES['uploadgambar']['tmp_name'];
+		$path = "bukti/".$random.'.'.$ext;
+		$pathdb = "bukti/".$random.'.'.$ext;
+
+		if(explode("/", $tipe_file)[0] === "image"){
+			if($ukuran_file <= 5000000){ 
+				if(move_uploaded_file($tmp_file, $path)){ 
+				
+					$kon = mysqli_query($conn,"insert into konfirmasi (orderid, userid, payment, namarekening, gambar, tglbayar) 
+					values('$idorder','$userid','$metode','$nama','$pathdb','$tanggal')");
+					if ($kon){
+					
+					$up = mysqli_query($conn,"update cart set status='Confirmed' where orderid='$idorder'");
+					
+					echo " <div class='alert alert-success'>
+						Terima kasih telah melakukan konfirmasi, team kami akan melakukan verifikasi.
+						Informasi selanjutnya akan dikirim via Email
+						</div>
+					<meta http-equiv='refresh' content='7; url= index.php'/>  ";
+					} else {
+						echo "<div class='alert alert-warning'>
+						Gagal Submit, silakan ulangi lagi.
+						</div>
+						<meta http-equiv='refresh' content='3; url= konfirmasi.php'/> ";
+					}
+				}else{
+					// Jika gambar gagal diupload, Lakukan :
+					echo "Sorry, there's a problem while uploading the file.";
+					echo "<br><meta http-equiv='refresh' content='5; URL=konfirmasi.php'> You will be redirected to the form in 5 seconds";
+				}
+			}else{
+				// Jika ukuran file lebih dari 1MB, lakukan :
+				echo "Sorry, the file size is not allowed to more than 1mb";
+				echo "<br><meta http-equiv='refresh' content='5; URL=konfirmasi.php'> You will be redirected to the form in 5 seconds";
+			}
+		}else{
+			// Jika tipe file yang diupload bukan JPG / JPEG / PNG, lakukan :
+			echo "Sorry, the image format should be JPG/PNG.";
+			echo "The current format is <strong>{$tipe_file}</strong>";
 		}
-		} else {
-			echo "<div class='alert alert-danger'>
-			Kode Order tidak ditemukan, harap masukkan kembali dengan benar
-		  </div>
-		 <meta http-equiv='refresh' content='4; url= konfirmasi.php'/> ";
-		}
-		
-		
-	};
+			
+	} else {
+		echo "<div class='alert alert-danger'>
+		Kode Order tidak ditemukan, harap masukkan kembali dengan benar
+		</div>
+		<meta http-equiv='refresh' content='4; url= konfirmasi.php'/> ";
+	}
+	
+	
+};
 
 ?>
 
@@ -105,17 +133,20 @@ if(isset($_POST['confirm']))
 			<h2>Konfirmasi</h2>
 			<div class="login-form-grids">
 				<h3>Kode Order</h3>
-				<form method="post">
-				<strong>
-					<input type="text" name="orderid" value="<?php echo $idorder ?>" disabled>
-				</strong>
-				<h6>Informasi Pembayaran</h6>
-					
-					<input type="text" name="nama" placeholder="Nama Pemilik Rekening / Sumber Dana" required>
+				<form method="post" enctype="multipart/form-data">
+					<strong>
+						<input type="text" name="orderid" value="<?php echo $idorder ?>" disabled>
+					</strong>
+					<h6>Informasi Pembayaran</h6>
+					<input type="text" name="nama" placeholder="Nama Pemilik Rekening" required>
 					<br>
+
+					<h6>Alamat</h6>
+					<input type="text" name="alamat" placeholder="Alamat Rumah Anda" required>
+					<br>
+
 					<h6>Rekening Tujuan</h6>
 					<select name="metode" class="form-control">
-						
 						<?php
 						$metode = mysqli_query($conn,"select * from pembayaran");
 						
@@ -125,12 +156,14 @@ if(isset($_POST['confirm']))
 							<?php
 						};
 						?>
-						
 					</select>
+
+					<h6>Bukti Pembayaran</h6>
+					<input type="file" name="uploadgambar" accept="image/*">
 					<br>
 					<h6>Tanggal Bayar</h6>
 					<input type="date" class="form-control" name="tanggal">
-					<input type="submit" name="confirm" value="Kirim">
+					<input type="submit" name="confirm" value="Submit">
 				</form>
 			</div>
 			<div class="register-home">

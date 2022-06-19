@@ -97,38 +97,7 @@ if(isset($_POST['selesai']))
     <!-- preloader area end -->
     <!-- page container area start -->
     <div class="page-container">
-        <!-- sidebar menu area start -->
-        <div class="sidebar-menu">
-            <div class="main-menu">
-                <div class="menu-inner">
-                    <nav>
-                        <ul class="metismenu" id="menu">
-							<li><a href="index.php"><span>Home</span></a></li>
-							<li class="active">
-                                <a href="manageorder.php"><i class="ti-dashboard"></i><span>Kelola Pesanan</span></a>
-                            </li>
-							<li>
-                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-layout"></i><span>Kelola Toko
-                                    </span></a>
-                                <ul class="collapse">
-                                    <li><a href="kategori.php">Kategori</a></li>
-                                    <li><a href="produk.php">Produk</a></li>
-									<li><a href="pembayaran.php">Metode Pembayaran</a></li>
-                                </ul>
-                            </li>
-							<li><a href="customer.php"><span>Kelola Pelanggan</span></a></li>
-							<li><a href="user.php"><span>Kelola Staff</span></a></li>
-                            <li>
-                                <a href="../logout.php"><span>Logout</span></a>
-                                
-                            </li>
-                            
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        <!-- sidebar menu area end -->
+			<?php include 'navigator.php' ?>
         <!-- main content area start -->
         <div class="main-content">
             <!-- header area start -->
@@ -251,23 +220,26 @@ if(isset($_POST['selesai']))
 										$met = $tarik['payment'];
 										$namarek = $tarik['namarekening'];
 										$tglb = $tarik['tglbayar'];
+										$gambar = $tarik['gambar'];
 										echo '
 										Informasi Pembayaran
 									<div class="data-tables datatable-dark">
-									<table id="dataTable2" class="display" style="width:100%"><thead class="thead-dark">
+									<table id="dataTable2" class="display" style="width:100%">
+										<thead class="thead-dark">
+											<th>Metode</th>
+											<th>Pemilik Rekening</th>
+											<th>Tanggal Pembayaran</th>
+											<th>Bukti Transfer</th>
+										</thead>
+										<tbody>
 											<tr>
-												<th>Metode</th>
-												<th>Pemilik Rekening</th>
-												<th>Tanggal Pembayaran</th>
-												
-											</tr></thead><tbody>
-											<tr>
-											<td>'.$met.'</td>
-											<td>'.$namarek.'</td>
-											<td>'.$tglb.'</td>
+												<td>'.$met.'</td>
+												<td>'.$namarek.'</td>
+												<td>'.$tglb.'</td>
+												<td><img style="width=200px;" src="../'.$gambar.'" alt="bukti.png" /></td
 											</tr>
-											</tbody>
-										</table>
+										</tbody>
+									</table>
 									</div>
 									<br><br>
 									<form method="post">
@@ -302,7 +274,7 @@ if(isset($_POST['selesai']))
         <!-- footer area start-->
         <footer>
             <div class="footer-area">
-                <p>Yuma Mahdi Andika</p>
+                <p>Digital Tech</p>
             </div>
         </footer>
         <!-- footer area end-->

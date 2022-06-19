@@ -22,7 +22,7 @@
 					} else {
 					echo '
 					<li style="color:white">Halo, '.$_SESSION["name"].'
-					<li><a href="admin">Admin Panel</a></li>
+					<li><a href="/admin/index.php">Admin Panel</a></li>
 					<li><a href="logout.php">Keluar?</a></li>
 					';
 					};

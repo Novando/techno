@@ -7,6 +7,7 @@ include 'dbconnect.php';
 <!DOCTYPE html>
 <html>
 <head>
+<link href="images/logo.png" rel="shortcut icon">
 <title>DIGITAL TECH</title>
 <!-- for-mobile-apps -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
