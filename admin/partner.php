@@ -166,7 +166,7 @@
 			$.ajax({
 				type: "POST",
 				url: "activate.php",
-				data: { userId: "id" }
+				data: { userId: id }
 			});
 		};
 	</script>

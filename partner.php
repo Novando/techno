@@ -1,35 +1,6 @@
 <?php
-session_start();
-if(!isset($_SESSION['log'])){
-	
-} else {
-	header('location:index.php');
-};
-include 'dbconnect.php';
-
-if(isset($_POST['adduser']))
-	{
-		$nama = $_POST['nama'];
-		$telp = $_POST['telp'];
-		$alamat = $_POST['alamat'];
-		$email = $_POST['email'];
-		$pass = password_hash($_POST['pass'], PASSWORD_DEFAULT); 
-			  
-		$tambahuser = mysqli_query($conn,"insert into login (namalengkap, email, password, notelp, alamat) 
-		values('$nama','$email','$pass','$telp','$alamat')");
-		if ($tambahuser){
-		echo " <div class='alert alert-success'>
-			Berhasil mendaftar, silakan masuk.
-		  </div>
-		<meta http-equiv='refresh' content='1; url= login.php'/>  ";
-		} else { echo "<div class='alert alert-warning'>
-			Gagal mendaftar, silakan coba lagi.
-		  </div>
-		 <meta http-equiv='refresh' content='1; url= registered.php'/> ";
-		}
-		
-	};
-
+	session_start();
+	include 'dbconnect.php';
 ?>
 
 <!DOCTYPE html>
@@ -80,30 +51,87 @@ if(isset($_POST['adduser']))
 		</div>
 	</div>
 <!-- //breadcrumbs -->
-<!-- register -->
-	<div class="register">
-		<div class="container">
-			<h2>Daftar Disini</h2>
-			<div class="login-form-grids">
-				<h5>Informasi Pribadi</h5>
-				<form method="post">
-					<input type="text" name="nama" placeholder="Nama Lengkap" required>
-					<input type="text" name="telp" placeholder="Nomor Telepon" required maxlength="13">
-					<input type="text" name="alamat" placeholder="Alamat Lengkap" required>
-				
-				<h6>Informasi Login</h6>
+<?php
+	if(isset($_SESSION['email'])) {
+		$email = $_SESSION['email'];
+		if (isset($_POST['agree'])) {
+			mysqli_query($conn, "UPDATE login SET requestpartner=true WHERE email='$email'");
+			echo " <div class='alert alert-success'>
+				Berhasil mendaftar, Permohonan anda akan kami tinjau ulang.
+				</div>";
+		}
+?>
+		<!-- register -->
+			<div class="register">
+				<div class="container">
+					<div class="login-form-grids">
+						<h5>Daftar sebagi mitra</h5>
+						<p>
+							Sebagai mitra, Anda harus bersedia untuk untuk memberikan dukungan pengadaan stok untuk semua atau sebagian barang yang dijual oleh Digital Tech.
+						<p>
+						<p>
+							Sebelum Anda dapat mulai memberikan dukungan pengadaan stok barang, permohonan Anda akan kami tinjau.
+						<p>
+						<form method="post">
+							<input type="submit" name="agree" value="Saya setuju">
+						</form>
+					</div>
+					<div class="register-home">
+						<a href="index.php">Saya Tidak Setuju</a>
+					</div>
+				</div>
+			</div>
+		<!-- //register -->
+<?php
+	} else {
+		if(isset($_POST['addpartner'])) {
+			$nama = $_POST['nama'];
+			$telp = $_POST['telp'];
+			$alamat = $_POST['alamat'];
+			$email = $_POST['email'];
+			$pass = password_hash($_POST['pass'], PASSWORD_DEFAULT); 
 					
-					<input type="email" name="email" placeholder="Email" required="@">
-					<input type="password" name="pass" placeholder="Password" required>
-					<input type="submit" name="adduser" value="Daftar">
-				</form>
+			$tambahuser = mysqli_query($conn,"insert into login (namalengkap, email, password, notelp, alamat, requestpartner) 
+			values('$nama','$email','$pass','$telp','$alamat', true)");
+			if ($tambahuser){
+			echo " <div class='alert alert-success'>
+				Berhasil mendaftar, Permohonan anda akan kami tinjau ulang. silakan masuk.
+				</div>
+			<meta http-equiv='refresh' content='1; url= login.php'/>  ";
+			} else { echo "<div class='alert alert-warning'>
+				Gagal mendaftar, silakan coba lagi.
+				</div>
+			<meta http-equiv='refresh' content='1; url= registered.php'/> ";
+			}
+		};
+?>
+		<!-- register -->
+			<div class="register">
+				<div class="container">
+					<h2>Daftar Disini</h2>
+					<div class="login-form-grids">
+						<h5>Informasi Pribadi</h5>
+						<form method="post">
+							<input type="text" name="nama" placeholder="Nama Lengkap" required>
+							<input type="text" name="telp" placeholder="Nomor Telepon" required maxlength="13">
+							<input type="text" name="alamat" placeholder="Alamat Lengkap" required>
+						
+						<h6>Informasi Login</h6>
+							
+							<input type="email" name="email" placeholder="Email" required="@">
+							<input type="password" name="pass" placeholder="Password" required>
+							<input type="submit" name="addpartner" value="Daftar">
+						</form>
+					</div>
+					<div class="register-home">
+						<a href="index.php">Batal</a>
+					</div>
+				</div>
 			</div>
-			<div class="register-home">
-				<a href="index.php">Batal</a>
-			</div>
-		</div>
-	</div>
-<!-- //register -->
+		<!-- //register -->
+<?php
+	};
+?>
 <!-- //footer -->
 <div class="footer">
 		<div class="container">
